@@ -69,7 +69,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.paul = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel", "libvirtd" ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       tree
     ];
@@ -83,6 +83,7 @@
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
     alacritty
+    dnsmasq # Required for default libvirt network
     fuzzel
     git
     mako
@@ -115,6 +116,14 @@
   security.pam.services.swaylock = {};
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Add virtualization
+  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd.qemu = {
+    swtpm.enable = true;
+  };
+  programs.virt-manager.enable = true;
+
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
