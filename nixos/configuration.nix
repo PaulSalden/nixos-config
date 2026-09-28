@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   imports =
@@ -10,6 +10,8 @@
       ./hardware-configuration.nix
       ./home-manager.nix
       ./extra-drives.nix
+      ./fonts.nix
+      ./wireguard.nix
     ];
 
   # Enable btrfs compression
@@ -79,19 +81,25 @@
   programs.firefox.enable = true;
   programs.hyprlock.enable = true;
   programs.niri.enable = true;
-  programs.waybar.enable = true;
+  #programs.waybar.enable = true;
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
+    adwaita-icon-theme
+    adwaita-qt
+    adwaita-qt6
+    inputs.agenix.packages.x86_64-linux.default
     alacritty
     dnsmasq # Required for default libvirt network
     fuzzel
     git
+    gnome-themes-extra
     mako
     swaylock
     swayidle
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    waybar
     wget
   ];
 
@@ -175,6 +183,8 @@
     };  
 
   };
+
+  age.identityPaths = [ "/home/paul/.ssh/id_rsa" ];
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you

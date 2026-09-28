@@ -75,11 +75,48 @@
 
   xdg.desktopEntries."com.freerdp.client.sdl3" = {
     name = "psaldenws1";
-    exec = "sdl-freerdp +clipboard +fonts /dynamic-resolution /network:broadband-low /u:pauls /d:comsol /v:psaldenws1 -grab-keyboard";
+    exec = "sdl-freerdp +clipboard +fonts /dynamic-resolution /network:broadband-low /u:pauls /d:comsol /v:psaldenws1 -grab-keyboard /prevent-session-lock";
     icon = "krdc";
     terminal = false;
     type = "Application";
     #categories = [ "Utility" ];
+  };
+
+  home.file."sync".source =
+    config.lib.file.mkOutOfStoreSymlink "/var/sync";
+  home.file."Pictures".source =
+    config.lib.file.mkOutOfStoreSymlink "/var/sync/Pictures";
+
+  #age = {
+  #  identityPaths = [ "/home/paul/.ssh/id_rsa" ];
+  #  secrets = {
+  #    example-secret = {
+  #      file = ../secrets/wgprivate-secret.age;
+  #    };
+  #  };
+  #};
+
+  # GTK Configuration
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Adwaita"; # Or "Adwaita-dark"
+      package = pkgs.gnome-themes-extra;
+    };
+    iconTheme = {
+      name = "Adwaita";
+      package = pkgs.adwaita-icon-theme;
+    };
+  };
+
+  # Qt Configuration
+  qt = {
+    enable = true;
+    platformTheme.name = "adwaita";
+    style = {
+      name = "adwaita"; # Or "adwaita-dark"
+      package = pkgs.adwaita-qt;
+    };
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

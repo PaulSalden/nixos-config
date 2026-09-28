@@ -8,12 +8,21 @@
     # Home manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Add agenix input
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      # Optional: disable darwin dependencies on Linux
+      #inputs.darwin.follows = "";
+    };
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
+    agenix,
     ...
   } @ inputs: let
   in {
@@ -23,7 +32,10 @@
       nixos = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs;};
         # > Our main nixos configuration file <
-        modules = [./nixos/configuration.nix];
+        modules = [
+          ./nixos/configuration.nix
+          agenix.nixosModules.default
+        ];
       };
     };
 

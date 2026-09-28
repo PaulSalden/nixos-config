@@ -6,9 +6,12 @@
 
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
-    users = {
-      # Import your home-manager configuration
-      paul = import ../home-manager/home.nix;
+    users.paul = {
+      imports = [
+        # Home Manager user-level agenix module
+        inputs.agenix.homeManagerModules.default
+        ../home-manager/home.nix
+      ];
     };
   };
 }
