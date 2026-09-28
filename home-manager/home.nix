@@ -45,6 +45,8 @@
   # programs.neovim.enable = true;
   # home.packages = with pkgs; [ steam ];
 
+  programs.chromium.enable = true;
+
   # Enable home-manager and git
   programs.home-manager.enable = true;
   programs.git = {
@@ -59,9 +61,26 @@
   };
 
   home.packages = with pkgs; [
+    app2unit
+    bibata-cursors
     freerdp
     keepassxc
+    nerd-fonts.jetbrains-mono
+    pwvucontrol
+    steam-run
+    swaybg
+    swayidle
+    wlsunset
   ];
+
+  xdg.desktopEntries."com.freerdp.client.sdl3" = {
+    name = "psaldenws1";
+    exec = "sdl-freerdp +clipboard +fonts /dynamic-resolution /network:broadband-low /u:pauls /d:comsol /v:psaldenws1 -grab-keyboard";
+    icon = "krdc";
+    terminal = false;
+    type = "Application";
+    #categories = [ "Utility" ];
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "26.05";

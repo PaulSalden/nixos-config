@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./home-manager.nix
+      ./extra-drives.nix
     ];
 
   # Enable btrfs compression
@@ -25,7 +26,7 @@
   # networking.hostName = "nixos"; # Define your hostname.
 
   # Configure network connections interactively with nmcli or nmtui.
-  networking.networkmanager.enable = true;
+  #networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Amsterdam";
@@ -69,13 +70,14 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.paul = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "libvirtd" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "libvirtd" "sync" ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       tree
     ];
   };
 
   programs.firefox.enable = true;
+  programs.hyprlock.enable = true;
   programs.niri.enable = true;
   programs.waybar.enable = true;
 
@@ -113,7 +115,7 @@
   services.gnome.gnome-keyring.enable = true;
 
   security.polkit.enable = true;
-  security.pam.services.swaylock = {};
+  security.pam.services.hyprlock = {};
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -130,6 +132,49 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
+  networking = {
+
+    useDHCP = false;
+    networkmanager.enable = false;
+    defaultGateway = "192.168.2.254";
+    nameservers = ["9.9.9.9"];
+
+    interfaces.br0.ipv4 = {
+      addresses = [
+        {
+          address = "192.168.2.205";
+          prefixLength = 24;
+        }
+      ];
+      routes = [
+        {
+          address = "10.0.8.165";
+          prefixLength = 32;
+          via = "192.168.2.202";
+        }
+        {
+          address = "10.16.16.0";
+          prefixLength = 24;
+          via = "192.168.2.202";
+        }
+      ];
+    };
+
+    bridges = {
+      br0 = {
+        interfaces = [
+          "enp7s0"
+        ];
+      };
+    };
+
+    hosts = {
+      "10.0.8.165" = ["cww.comsol.com"];
+      "10.16.16.133" = ["psaldenws1" "psaldenws2" "psaldenws1.comsol.com" "psaldenws2.comsol.com"];
+    };  
+
+  };
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
