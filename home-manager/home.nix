@@ -14,6 +14,9 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
+    ./calendar.nix
+    ./contacts.nix
+    ./mail.nix
   ];
 
   nixpkgs = {
@@ -47,6 +50,25 @@
 
   programs.chromium.enable = true;
 
+  programs.tmux = {
+    enable = true;
+    mouse = true;
+    terminal = "screen-256color";
+  };
+
+  programs.yazi.enable = true;
+  programs.yazi.enableBashIntegration = true;
+  programs.yazi.settings = {
+    opener.image = [
+      {
+        run = ''swayimg "$@"'';
+        orphan = true;
+        desc = "View Image";
+      }
+    ];
+    open.rules = [ { mime = "image/*"; use = "image"; } ];
+  };
+
   # Enable home-manager and git
   programs.home-manager.enable = true;
   programs.git = {
@@ -62,21 +84,27 @@
 
   home.packages = with pkgs; [
     app2unit
+    beyond-all-reason
     bibata-cursors
     freerdp
     keepassxc
-    nerd-fonts.jetbrains-mono
+    mpv
     pwvucontrol
+    signal-desktop
     steam-run
     swaybg
     swayidle
+    swayimg
+    syncthing
+    syncthingtray
+    teamspeak6-client
     wlsunset
   ];
 
   xdg.desktopEntries."com.freerdp.client.sdl3" = {
     name = "psaldenws1";
     exec = "sdl-freerdp +clipboard +fonts /dynamic-resolution /network:broadband-low /u:pauls /d:comsol /v:psaldenws1 -grab-keyboard /prevent-session-lock";
-    icon = "krdc";
+    icon = "computer";
     terminal = false;
     type = "Application";
     #categories = [ "Utility" ];
@@ -86,15 +114,10 @@
     config.lib.file.mkOutOfStoreSymlink "/var/sync";
   home.file."Pictures".source =
     config.lib.file.mkOutOfStoreSymlink "/var/sync/Pictures";
+  home.file.".local/state/syncthing".source =
+    config.lib.file.mkOutOfStoreSymlink "/var/sync/Config/syncthing-desktop";
 
-  #age = {
-  #  identityPaths = [ "/home/paul/.ssh/id_rsa" ];
-  #  secrets = {
-  #    example-secret = {
-  #      file = ../secrets/wgprivate-secret.age;
-  #    };
-  #  };
-  #};
+  age.identityPaths = [ "${config.home.homeDirectory}/.config/agenix/key.txt" ];
 
   # GTK Configuration
   gtk = {
@@ -107,6 +130,10 @@
       name = "Adwaita";
       package = pkgs.adwaita-icon-theme;
     };
+    font = {
+      name = "Inter";
+      size = 10;
+    };
   };
 
   # Qt Configuration
@@ -118,6 +145,20 @@
       package = pkgs.adwaita-qt;
     };
   };
+
+  fonts.fontconfig.defaultFonts = {
+    monospace = [ "JetBrainsMono Nerd Font" ];
+    sansSerif = [ "Inter" ];
+  };
+
+
+  programs.bash.enable = true;
+  programs.bash.shellAliases = {
+    avpn = "ssh -o RemoteCommand=/home/paul/connectvpn.sh virt";
+  };
+
+  # Required for media keys
+  services.playerctld.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "26.05";

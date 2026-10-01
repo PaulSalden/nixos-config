@@ -24,6 +24,7 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = false; # edit /paul
+  boot.loader.systemd-boot.configurationLimit = 5;
 
   # networking.hostName = "nixos"; # Define your hostname.
 
@@ -78,9 +79,12 @@
     ];
   };
 
+  nixpkgs.config.allowUnfree = true;
+
   programs.firefox.enable = true;
   programs.hyprlock.enable = true;
   programs.niri.enable = true;
+  programs.steam.enable = true;
   #programs.waybar.enable = true;
 
   # List packages installed in system profile.
@@ -101,6 +105,12 @@
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     waybar
     wget
+    xwayland-satellite
+  ];
+
+  fonts.packages = with pkgs; [
+    inter
+    nerd-fonts.jetbrains-mono
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -184,7 +194,7 @@
 
   };
 
-  age.identityPaths = [ "/home/paul/.ssh/id_rsa" ];
+  age.identityPaths = [ "/home/paul/.config/agenix/key.txt" ];
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
