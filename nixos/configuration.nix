@@ -191,6 +191,13 @@
 
   age.identityPaths = [ "/home/paul/.config/agenix/key.txt" ];
 
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep-since 4d --keep 3";
+    flake = "/home/paul/nixos-config"; # sets NH_OS_FLAKE variable for you
+  };
+
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
   # accidentally delete configuration.nix.
