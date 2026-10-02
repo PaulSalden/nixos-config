@@ -1,6 +1,9 @@
 { pkgs, ... }:
 
 {
+  # Required for media keys
+  services.playerctld.enable = true;
+
   programs.waybar = {
     enable = true;
     systemd.enable = true;

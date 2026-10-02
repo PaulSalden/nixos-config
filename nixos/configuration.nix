@@ -82,7 +82,6 @@
   nixpkgs.config.allowUnfree = true;
 
   programs.firefox.enable = true;
-  programs.hyprlock.enable = true;
   programs.niri.enable = true;
   programs.steam.enable = true;
   #programs.waybar.enable = true;
@@ -96,16 +95,11 @@
     inputs.agenix.packages.x86_64-linux.default
     alacritty
     dnsmasq # Required for default libvirt network
-    fuzzel
     git
     gnome-themes-extra
-    mako
-    swaylock
-    swayidle
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #waybar
     wget
-    xwayland-satellite
   ];
 
   fonts.packages = with pkgs; [
@@ -132,6 +126,7 @@
   };
   services.gnome.gnome-keyring.enable = true;
 
+  programs.hyprlock.enable = true;
   security.polkit.enable = true;
   security.pam.services.hyprlock = {};
 

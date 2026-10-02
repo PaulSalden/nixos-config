@@ -17,6 +17,7 @@
     ./calendar.nix
     ./contacts.nix
     ./mail.nix
+    ./niri.nix
     ./waybar.nix
   ];
 
@@ -84,22 +85,16 @@
   };
 
   home.packages = with pkgs; [
-    app2unit
     beyond-all-reason
-    bibata-cursors
     freerdp
     keepassxc
     mpv
     pwvucontrol
     signal-desktop
     steam-run
-    swaybg
-    swayidle
     swayimg
     syncthing
-    syncthingtray
     teamspeak6-client
-    wlsunset
   ];
 
   xdg.desktopEntries."com.freerdp.client.sdl3" = {
@@ -157,9 +152,6 @@
   programs.bash.shellAliases = {
     avpn = "ssh -o RemoteCommand=/home/paul/connectvpn.sh virt";
   };
-
-  # Required for media keys
-  services.playerctld.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "26.05";
