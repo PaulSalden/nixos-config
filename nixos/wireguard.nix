@@ -38,6 +38,21 @@
             # Send keepalives every 25 seconds. Important to keep NAT tables alive.
             # persistentKeepalive = 25;
           }
+          {
+            name = "phone";
+            publicKey = "084q9c5QUC3Vn1N3mHH5ThBvGbNwdg5AK09QW3F93UQ=";
+            allowedIPs = [ "10.13.37.2/32" ];
+          }
+          {
+            name = "laptop";
+            publicKey = "5GwHK6tE7ZyKySp6U7YWOFxYA547ofv47RTOsnzO0Bs=";
+            allowedIPs = [ "10.13.37.3/32" ];
+          }
+          #{
+          #  name = "pi";
+          #  publicKey = "SwZh12ZVoBTx7i/PJxWP3lkJWO8NfaE8oBBvzizb1zs=";
+          #  allowedIPs = [ "10.13.37.0/24" ];
+          #}
         ];
       };
     };
