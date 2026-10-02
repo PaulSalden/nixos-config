@@ -195,7 +195,7 @@
     enable = true;
     clean.enable = true;
     clean.extraArgs = "--keep-since 4d --keep 3";
-    flake = "/home/paul/nixos-config"; # sets NH_OS_FLAKE variable for you
+    flake = "/home/paul/nixos-conf"; # sets NH_OS_FLAKE variable for you
   };
 
   # Copy the NixOS configuration file and link it from the resulting system
