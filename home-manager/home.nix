@@ -17,6 +17,7 @@
     ./calendar.nix
     ./contacts.nix
     ./mail.nix
+    ./waybar.nix
   ];
 
   nixpkgs = {
