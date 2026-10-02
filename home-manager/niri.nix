@@ -80,10 +80,7 @@
     };
   };
 
-  # 5. Syncthing Tray
-  services.syncthing.tray.enable = true;
-
-  # 6. Native Cursor Management
+  # 5. Native Cursor Management
   home.pointerCursor = {
     enable = true; # Fixed warning
     name = "Bibata-Modern-Classic";
@@ -223,7 +220,7 @@
   
     environment = {
       SDL_VIDEO_DRIVER = "wayland";
-      QT_QPA_PLATFORMTHEME = "hyprqt6engine";
+      #QT_QPA_PLATFORMTHEME = "hyprqt6engine";
       XDG_MENU_PREFIX = "niri-";
     };
   

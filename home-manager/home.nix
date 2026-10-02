@@ -93,7 +93,6 @@
     signal-desktop
     steam-run
     swayimg
-    syncthing
     teamspeak6-client
   ];
 
@@ -152,6 +151,9 @@
   programs.bash.shellAliases = {
     avpn = "ssh -o RemoteCommand=/home/paul/connectvpn.sh virt";
   };
+
+  services.syncthing.enable = true; 
+  services.syncthing.tray.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "26.05";
