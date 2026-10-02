@@ -5,4 +5,5 @@ in
   "wgprivate-secret.age".publicKeys = [ paul ];
   "radicale-secret.age".publicKeys = [ paul ];
   "kpn-secret.age".publicKeys = [ paul ];
+  "cloudflare-secret.age".publicKeys = [ paul ];
 }

@@ -7,6 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
+      ./dyndns.nix
       ./hardware-configuration.nix
       ./home-manager.nix
       ./extra-drives.nix
