@@ -1,64 +1,62 @@
-{ config, ... }:
+{ config, pkgs, ... }:
+
 {
   age.secrets.wg-key = {
     file = "/home/paul/nixos-conf/secrets/wgprivate-secret.age";
+    mode = "640";
+    owner = "systemd-network";
+    group = "systemd-network";
   };
 
   networking.firewall.allowedUDPPorts = [ 36421 ];
 
-  networking.wireguard = {
-    enable = true;
-    useNetworkd = true;
-    interfaces = {
-      # network interface name.
-      # You can name the interface arbitrarily.
-      wg0 = {
-        # the IP address and subnet of this peer
-        ips = [ "10.13.37.4/24" ];
+  systemd.network = {
+    # 1. Define the WireGuard Virtual Network Device
+    netdevs = {
+      "50-wg0" = {
+        netdevConfig = {
+          Kind = "wireguard";
+          Name = "wg0";
+        };
 
-        # WireGuard Port
-        # Must be accessible by peers
-        listenPort = 36421;
+        wireguardConfig = {
+          PrivateKeyFile = config.age.secrets.wg-key.path;
+          ListenPort = 36421;
+          RouteTable = "main";
+        };
 
-        # Path to the private key file.
-        #
-        # Note: can also be included inline via the privateKey option,
-        # but this makes the private key world-readable;
-        # using privateKeyFile is recommended.
-        privateKeyFile = config.age.secrets.wg-key.path;
-
-        peers = [
-          { 
-            name = "pi";
-            publicKey = "SwZh12ZVoBTx7i/PJxWP3lkJWO8NfaE8oBBvzizb1zs=";
-            allowedIPs = [ "10.13.37.0/24" ];
-            endpoint = "192.168.2.201:36421";
-            #  ToDo: route to endpoint not automatically configured
-            # https://wiki.archlinux.org/index.php/WireGuard#Loop_routing
-            # https://discourse.nixos.org/t/solved-minimal-firewall-setup-for-wireguard-client/7577
-            # Send keepalives every 25 seconds. Important to keep NAT tables alive.
-            # persistentKeepalive = 25;
+        wireguardPeers = [
+          {
+            # Peer: pi
+            PublicKey = "SwZh12ZVoBTx7i/PJxWP3lkJWO8NfaE8oBBvzizb1zs=";
+            AllowedIPs = [ "10.13.37.0/24" ];
+            Endpoint = "192.168.2.201:36421";
           }
           {
-            name = "phone";
-            publicKey = "084q9c5QUC3Vn1N3mHH5ThBvGbNwdg5AK09QW3F93UQ=";
-            allowedIPs = [ "10.13.37.2/32" ];
+            # Peer: phone
+            PublicKey = "084q9c5QUC3Vn1N3mHH5ThBvGbNwdg5AK09QW3F93UQ=";
+            AllowedIPs = [ "10.13.37.2/32" ];
           }
           {
-            name = "laptop";
-            publicKey = "5GwHK6tE7ZyKySp6U7YWOFxYA547ofv47RTOsnzO0Bs=";
-            allowedIPs = [ "10.13.37.3/32" ];
+            # Peer: laptop
+            PublicKey = "5GwHK6tE7ZyKySp6U7YWOFxYA547ofv47RTOsnzO0Bs=";
+            AllowedIPs = [ "10.13.37.3/32" ];
           }
-          #{
-          #  name = "pi";
-          #  publicKey = "SwZh12ZVoBTx7i/PJxWP3lkJWO8NfaE8oBBvzizb1zs=";
-          #  allowedIPs = [ "10.13.37.0/24" ];
-          #}
         ];
+      };
+    };
+
+    # 2. Apply Network settings to wg0 (IP address and routes)
+    networks = {
+      "50-wg0" = {
+        matchConfig.Name = "wg0";
+
+        # Address assigned to this peer
+        address = [ "10.13.37.4/24" ];
+
+        # systemd-networkd automatically configures routes for the AllowedIPs 
+        # defined under wireguardPeers above.
       };
     };
   };
 }
-# it’s not imperative but it does not know how to do it :
-# sudo ip route add 11.111.11.111 via 192.168.1.11 dev wlo1
-# the ip adresse 11: external and 192: local.

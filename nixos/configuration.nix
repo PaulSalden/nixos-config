@@ -147,51 +147,80 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  networking = {
+  #networking = {
 
-    useDHCP = false;
-    networkmanager.enable = false;
-    useNetworkd = true;
-    defaultGateway = {
-      address = "192.168.2.254";
-      interface = "br0";
-    };
-    nameservers = ["9.9.9.9"];
+  #  useDHCP = false;
+  #  networkmanager.enable = false;
+  #  #useNetworkd = true;
+  #  defaultGateway = {
+  #    address = "192.168.2.254";
+  #    interface = "br0";
+  #  };
+  #  nameservers = ["9.9.9.9"];
 
-    interfaces.br0.ipv4 = {
-      addresses = [
-        {
-          address = "192.168.2.205";
-          prefixLength = 24;
-        }
-      ];
-      routes = [
-        {
-          address = "10.0.8.165";
-          prefixLength = 32;
-          via = "192.168.2.202";
-        }
-        {
-          address = "10.16.16.0";
-          prefixLength = 24;
-          via = "192.168.2.202";
-        }
-      ];
-    };
+  #  interfaces.br0.ipv4 = {
+  #    addresses = [
+  #      {
+  #        address = "192.168.2.205";
+  #        prefixLength = 24;
+  #      }
+  #    ];
+  #    routes = [
+  #      {
+  #        address = "10.0.8.165";
+  #        prefixLength = 32;
+  #        via = "192.168.2.202";
+  #      }
+  #      {
+  #        address = "10.16.16.0";
+  #        prefixLength = 24;
+  #        via = "192.168.2.202";
+  #      }
+  #    ];
+  #  };
 
-    bridges = {
-      br0 = {
-        interfaces = [
-          "enp7s0"
-        ];
+  #  bridges = {
+  #    br0 = {
+  #      interfaces = [
+  #        "enp7s0"
+  #      ];
+  #    };
+  #  };
+
+  #  hosts = {
+  #    "10.0.8.165" = ["cww.comsol.com"];
+  #    "10.16.16.133" = ["psaldenws1" "psaldenws2" "psaldenws1.comsol.com" "psaldenws2.comsol.com"];
+  #  };  
+
+  #};
+
+  networking.useNetworkd = true;
+  systemd.network = {
+    enable = true;
+    netdevs = {
+      # Create the bridge interface
+      "20-br0" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "br0";
+        };
       };
     };
-
-    hosts = {
-      "10.0.8.165" = ["cww.comsol.com"];
-      "10.16.16.133" = ["psaldenws1" "psaldenws2" "psaldenws1.comsol.com" "psaldenws2.comsol.com"];
-    };  
-
+    networks = {
+      # Connect the bridge ports to the bridge
+      "30-enp7s0" = {
+        matchConfig.Name = "enp7s0";
+        networkConfig.Bridge = "br0";
+        linkConfig.RequiredForOnline = "enslaved";
+      };
+      # Configure the bridge for its desired function
+      "40-br0" = {
+        matchConfig.Name = "br0";
+        networkConfig = { DHCP = "ipv6"; };
+        address = [ "192.168.2.205/24" ];
+        routes = [ { Gateway = "192.168.2.254"; } ];
+      };
+    };
   };
 
   age.identityPaths = [ "/home/paul/.config/agenix/key.txt" ];
