@@ -194,7 +194,8 @@
 
   #};
 
-  networking.useNetworkd = true;
+  #networking.useNetworkd = true;
+  networking.useDHCP = false;
   systemd.network = {
     enable = true;
     netdevs = {
