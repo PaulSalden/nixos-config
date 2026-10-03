@@ -151,7 +151,11 @@
 
     useDHCP = false;
     networkmanager.enable = false;
-    defaultGateway = "192.168.2.254";
+    useNetworkd = true;
+    defaultGateway = {
+      address = "192.168.2.254";
+      interface = "br0";
+    };
     nameservers = ["9.9.9.9"];
 
     interfaces.br0.ipv4 = {
