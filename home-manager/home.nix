@@ -51,6 +51,7 @@
   # home.packages = with pkgs; [ steam ];
 
   programs.chromium.enable = true;
+  programs.obsidian.enable = true;
 
   programs.tmux = {
     enable = true;
